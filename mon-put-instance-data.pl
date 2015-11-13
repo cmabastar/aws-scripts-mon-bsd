@@ -561,7 +561,7 @@ if ($report_mem_util || $report_mem_used || $report_mem_avail || $report_swap_ut
 	# BSD always count cached memory as free SEE: sysctl vm.vmtotal
 	my $mem_avail = $mem_free + $mem_cached;
 	if (!defined($mem_used_incl_cache_buff)) {
-		$mem_avail += $mem_buffers;
+		$mem_avail += $mem_buffers + $minac;
 	}
 	my $mem_used = $mem_total - $mem_avail;
 	# TODO: Add swap support
@@ -569,8 +569,6 @@ if ($report_mem_util || $report_mem_used || $report_mem_avail || $report_swap_ut
 	my $swap_free = 0;
 	my $swap_used = 0;
 
-  # InActive memory are cached memory, it can be free and used when it is needed
-  add_metric('MemoryInActive', $mem_units, $minac / $mem_unit_div);
   if ($report_mem_util) {
     my $mem_util = 0;
     $mem_util = 100 * $mem_used / $mem_total if ($mem_total > 0);
